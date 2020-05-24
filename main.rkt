@@ -13,4 +13,12 @@
          (printf "~a~n" cur-line)))
      (range (- (Pos-line start) 1) (Pos-line end)))))
 
-(print-code "test.c" (Pos 4 2) (Pos 4 5))
+; (print-code "test.c" (Pos 4 2) (Pos 4 5))
+
+(: report (->* [#:message String] [#:error-code String] Void))
+(define (report #:message msg #:error-code [err-code : String ""])
+  (void))
+
+(report
+  #:message "type mismatching"
+  #:error-code "E0001")
