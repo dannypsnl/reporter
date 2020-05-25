@@ -21,9 +21,17 @@
    [message : String])
   #:transparent)
 
-(: report (->* [#:message String #:primary-label Label] [#:error-code String] Void))
-(define (report #:message msg #:primary-label primary-label #:error-code [err-code : String ""])
-  (void))
+(struct Report
+  ([message : String]
+   [primary-label : Label]
+   [error-code : (Option String)]
+   [more-labels : (Listof Label)]
+   [hint-message : (Option String)])
+  #:transparent)
+
+(: report (->* [#:message String #:primary-label Label] [#:error-code (Option String) #:more-labels (Listof Label) #:hint-message (Option String)] Report))
+(define (report #:message msg #:primary-label primary-label #:error-code [err-code #f] #:more-labels [more-labels '()] #:hint-message [hint-message #f])
+  (Report msg primary-label err-code more-labels hint-message))
 
 (report
   #:message "type mismatching"
