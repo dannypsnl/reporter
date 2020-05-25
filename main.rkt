@@ -15,6 +15,12 @@
 
 ; (print-code "test.c" (Pos 4 2) (Pos 4 5))
 
+(struct Label
+  ([start-pos : Pos]
+   [end-pos : Pos]
+   [message : String])
+  #:transparent)
+
 (: report (->* [#:message String] [#:error-code String] Void))
 (define (report #:message msg #:error-code [err-code : String ""])
   (void))
