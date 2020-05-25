@@ -4,16 +4,6 @@
 (require "position.rkt"
          "label.rkt")
 
-(: get-code (String Pos Pos -> (Listof String)))
-(define (get-code file-name start end)
-  (letrec ([file-path : Path (string->path file-name)]
-           [lines : (Listof String) (file->lines file-path)])
-    (map
-     (λ ([line-number : Integer])
-       (let ([cur-line (list-ref lines line-number)])
-         (format "~a | ~a~n" line-number cur-line)))
-     (range (- (Pos-line start) 1) (Pos-line end)))))
-
 (struct Report
   ([message : String]
    [primary-label : Label]
@@ -33,9 +23,7 @@
                           (format "[~a]: " err-code)
                           "")))
   (define primary-label (Report-primary-label report))
-  (define list-of-code (get-code "test.c" (Label-start primary-label) (Label-end primary-label)))
-  (string-append err-c-str (Report-message report) "\n"
-                 (string-join list-of-code)))
+  (string-append err-c-str (Report-message report) "\n"))
 
 (define s (report->string
  (report

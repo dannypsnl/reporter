@@ -3,6 +3,6 @@
 (provide Pos Pos-line)
 
 (struct Pos
-  ([line : Positive-Integer]
-   [column : Positive-Integer])
+  ([line : Integer]
+   [column : Integer])
   #:transparent)
