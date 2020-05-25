@@ -2,6 +2,8 @@
 
 Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). The purpose of this project is to create a util toolbox for compiler error reporting.
 
+WARNING: The project still in an early stage!
+
 ### API draft
 
 ```racket
