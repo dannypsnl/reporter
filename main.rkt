@@ -33,7 +33,16 @@
 (define (report #:message msg #:primary-label primary-label #:error-code [err-code #f] #:more-labels [more-labels '()] #:hint-message [hint-message #f])
   (Report msg primary-label err-code more-labels hint-message))
 
-(report
+(: report->string (-> Report String))
+(define (report->string report)
+  (define err-c-str (let ([err-code (Report-error-code report)])
+                      (if err-code
+                          (format "[~a]: " err-code)
+                          "")))
+  (string-append err-c-str (Report-message report)))
+
+(report->string
+ (report
   #:message "type mismatching"
   #:primary-label (Label (Pos 4 2) (Pos 4 5) "cannot assign a `string` to `int` variable")
-  #:error-code "E0001")
+  #:error-code "E0001"))
