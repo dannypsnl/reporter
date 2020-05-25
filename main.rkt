@@ -1,7 +1,8 @@
 #lang typed/racket
 
 (require racket/file)
-(require "position.rkt")
+(require "position.rkt"
+         "label.rkt")
 
 (: print-code (String Pos Pos -> Void))
 (define (print-code file-name start end)
@@ -15,11 +16,7 @@
 
 ; (print-code "test.c" (Pos 4 2) (Pos 4 5))
 
-(struct Label
-  ([start-pos : Pos]
-   [end-pos : Pos]
-   [message : String])
-  #:transparent)
+
 
 (struct Report
   ([message : String]
