@@ -21,10 +21,11 @@
    [message : String])
   #:transparent)
 
-(: report (->* [#:message String] [#:error-code String] Void))
-(define (report #:message msg #:error-code [err-code : String ""])
+(: report (->* [#:message String #:primary-label Label] [#:error-code String] Void))
+(define (report #:message msg #:primary-label primary-label #:error-code [err-code : String ""])
   (void))
 
 (report
   #:message "type mismatching"
+  #:primary-label (Label (Pos 4 2) (Pos 4 5) "cannot assign a `string` to `int` variable")
   #:error-code "E0001")
