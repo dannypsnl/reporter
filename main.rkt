@@ -4,19 +4,15 @@
 (require "position.rkt"
          "label.rkt")
 
-(: print-code (String Pos Pos -> Void))
-(define (print-code file-name start end)
+(: get-code (String Pos Pos -> (Listof String)))
+(define (get-code file-name start end)
   (letrec ([file-path : Path (string->path file-name)]
            [lines : (Listof String) (file->lines file-path)])
-    (for-each
+    (map
      (λ ([line-number : Integer])
        (let ([cur-line (list-ref lines line-number)])
-         (printf "~a~n" cur-line)))
+         (format "~a | ~a~n" line-number cur-line)))
      (range (- (Pos-line start) 1) (Pos-line end)))))
-
-; (print-code "test.c" (Pos 4 2) (Pos 4 5))
-
-
 
 (struct Report
   ([message : String]
@@ -36,10 +32,15 @@
                       (if err-code
                           (format "[~a]: " err-code)
                           "")))
-  (string-append err-c-str (Report-message report)))
+  (define primary-label (Report-primary-label report))
+  (define list-of-code (get-code "test.c" (Label-start primary-label) (Label-end primary-label)))
+  (string-append err-c-str (Report-message report) "\n"
+                 (string-join list-of-code)))
 
-(report->string
+(define s (report->string
  (report
   #:message "type mismatching"
   #:primary-label (Label (Pos 4 2) (Pos 4 5) "cannot assign a `string` to `int` variable")
-  #:error-code "E0001"))
+  #:error-code "E0001")))
+s
+(displayln s)

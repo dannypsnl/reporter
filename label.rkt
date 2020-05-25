@@ -1,11 +1,12 @@
 #lang typed/racket
 
-(provide Label)
+(provide Label Label-start Label-end)
 
+(require racket/file)
 (require "position.rkt")
 
 (struct Label
-  ([start-pos : Pos]
-   [end-pos : Pos]
+  ([start : Pos]
+   [end : Pos]
    [message : String])
   #:transparent)
