@@ -28,6 +28,13 @@
    [messages : (Mutable-HashTable Integer (Listof String))])
   #:transparent)
 
+(: string-repeat (Integer String -> String))
+(define (string-repeat n str)
+  (string-append* (make-list n str)))
+(: space-repeat (Integer -> String))
+(define (space-repeat n)
+  (string-repeat n " "))
+
 (: aggregate-labels (String (Listof Label) -> Collection))
 (define (aggregate-labels file-name label-list)
   (define get-line (λ ([label : Label]) (Pos-line (Label-start label))))
@@ -38,10 +45,17 @@
     (for-each
      (λ ([label : Label])
        (let* ([label-line (get-line label)]
-              [msgs : (Listof String) (hash-ref! msg-collection label-line (λ () '()))])
+              [msgs : (Listof String) (hash-ref! msg-collection label-line (λ () '()))]
+              [start-col (Pos-column (Label-start label))]
+              [end-col (Pos-column (Label-end label))]
+              [msg (format "~a | ~a~a ~a"
+                           (space-repeat (string-length (number->string label-line)))
+                           (space-repeat start-col)
+                           (string-repeat (- end-col start-col) "^")
+                           (Label-msg label))])
          (hash-set! msg-collection
                     label-line
-                    (append msgs (list (Label-msg label))))))
+                    (append msgs (list msg)))))
      label-list)
     (Collection file-path min-line max-line msg-collection)))
 
@@ -53,10 +67,14 @@
                               (Collection-start-line c)
                               (Collection-end-line c)))
   (for-each (λ ([line-number : Integer])
-              (displayln (list-ref code-list (- line-number start-line)))
-              (displayln (hash-ref! (Collection-messages c) line-number (λ () '()))))
+              ; show current line
+              (display (list-ref code-list (- line-number start-line)))
+              ; show message for current line
+              (for-each (λ ([msg : String])
+                          (displayln msg))
+                        (hash-ref! (Collection-messages c) line-number (λ () '()))))
             (range start-line (+ end-line 1)))
   (void))
 
 (print-collection
- (aggregate-labels "test.c" (list (Label (Pos 4 2) (Pos 4 5) "cannot assign a `string` to `int` variable"))))
+ (aggregate-labels "test.c" (list (Label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable"))))

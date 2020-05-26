@@ -1,6 +1,6 @@
 #include <stdio>
 
 int main() {
-  int x = 1 + 2;
+  int x = "hello";
   printf("x = %d\n", x);
 }
