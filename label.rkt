@@ -43,8 +43,14 @@
               [start-col (Pos-column (Label-start label))]
               [end-col (Pos-column (Label-end label))]
               [msg (format "~a | ~a~a ~a"
+                           ;;; align with line number string
                            (space-repeat (string-length (number->string label-line)))
+                           ;;; provide space as column shifted
                            (space-repeat start-col)
+                           ;;; repeat ^ to point out a part of code
+                           ; for example:
+                           ; 2 |     a = "hello";
+                           ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
                            (string-repeat (- end-col start-col) "^")
                            (Label-msg label))])
          (hash-set! msg-collection
