@@ -42,7 +42,7 @@
               [msgs : (Listof String) (hash-ref! msg-collection label-line (λ () '()))]
               [start-col (Pos-column (Label-start label))]
               [end-col (Pos-column (Label-end label))]
-              [msg (format "~a | ~a~a ~a"
+              [msg (format "~a | ~a~a ~a~n"
                            ;;; align with line number string
                            (space-repeat (string-length (number->string label-line)))
                            ;;; provide space as column shifted
@@ -71,7 +71,7 @@
               (display (list-ref code-list (- line-number start-line)))
               ; show message for current line
               (for-each (λ ([msg : String])
-                          (displayln msg))
+                          (display msg))
                         (hash-ref! (Collection-messages c) line-number (λ () '()))))
             (range start-line (+ end-line 1)))
   (void))
