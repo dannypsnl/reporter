@@ -31,7 +31,7 @@
                  (format "~a:~a:~a"
                          (Report-file-name report)
                          (Pos-line (Label-start primary-label))
-                         (Pos-line (Label-start primary-label))) "\n"
+                         (Pos-column (Label-start primary-label))) "\n"
                  collected
                  "=> " (Report-hint-message report)))
 
