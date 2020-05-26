@@ -3,7 +3,8 @@
 (provide Label Label-start Label-end get-code)
 
 (require racket/file)
-(require "position.rkt")
+(require "position.rkt"
+         "string-helper.rkt")
 
 (struct Label
   ([start : Pos]
@@ -27,13 +28,6 @@
    [end-line : Integer]
    [messages : (Mutable-HashTable Integer (Listof String))])
   #:transparent)
-
-(: string-repeat (Integer String -> String))
-(define (string-repeat n str)
-  (string-append* (make-list n str)))
-(: space-repeat (Integer -> String))
-(define (space-repeat n)
-  (string-repeat n " "))
 
 (: aggregate-labels (String (Listof Label) -> Collection))
 (define (aggregate-labels file-name label-list)
