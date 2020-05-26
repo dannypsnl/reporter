@@ -1,6 +1,8 @@
 #lang typed/racket
 
-(provide Label Label-start Label-end get-code)
+(provide Label Label-start Label-end get-code
+         collect-labels
+         collection->string)
 
 (require racket/file)
 (require "position.rkt"
@@ -29,8 +31,8 @@
    [messages : (Mutable-HashTable Integer (Listof String))])
   #:transparent)
 
-(: aggregate-labels (String (Listof Label) -> Collection))
-(define (aggregate-labels file-name label-list)
+(: collect-labels (String (Listof Label) -> Collection))
+(define (collect-labels file-name label-list)
   (define get-line (λ ([label : Label]) (Pos-line (Label-start label))))
   (define min-line (get-line (argmin get-line label-list)))
   (define max-line (get-line (argmax get-line label-list)))
@@ -59,22 +61,18 @@
      label-list)
     (Collection file-path min-line max-line msg-collection)))
 
-(: print-collection (Collection -> Void))
-(define (print-collection c)
+(: collection->string (Collection -> String))
+(define (collection->string c)
   (define start-line (Collection-start-line c))
   (define end-line (Collection-end-line c))
   (define code-list (get-code (Collection-file-path c)
                               (Collection-start-line c)
                               (Collection-end-line c)))
-  (for-each (λ ([line-number : Integer])
-              ; show current line
-              (display (list-ref code-list (- line-number start-line)))
-              ; show message for current line
-              (for-each (λ ([msg : String])
-                          (display msg))
-                        (hash-ref! (Collection-messages c) line-number (λ () '()))))
-            (range start-line (+ end-line 1)))
-  (void))
-
-(print-collection
- (aggregate-labels "test.c" (list (Label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable"))))
+  (string-append*
+   (map (λ ([line-number : Integer])
+          (string-append*
+           ; show current line
+           (list-ref code-list (- line-number start-line))
+           ; show message for current line
+           (hash-ref! (Collection-messages c) line-number (λ () '()))))
+        (range start-line (+ end-line 1)))))
