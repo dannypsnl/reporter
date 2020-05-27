@@ -4,6 +4,14 @@ Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). Th
 
 WARNING: The project still in an early stage!
 
+### Installation
+
+```racket
+git submodule update --init
+cd ./terminal-color/ && raco pkg install --auto && cd ..
+raco pkg install --auto
+```
+
 ### API draft
 
 ```racket
