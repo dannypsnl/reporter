@@ -22,7 +22,7 @@
   (define err-c-str (let ([err-code (Report-error-code report)])
                       (if err-code
                           (format "[~a]: " err-code)
-                          "")))
+                          "Error: ")))
   (define primary-label (Report-primary-label report))
   (: labels (Listof Label))
   (define labels (list* primary-label (Report-more-labels report)))
