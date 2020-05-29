@@ -54,9 +54,10 @@
                            ; for example:
                            ; 2 |     a = "hello";
                            ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
-                           (text-repeat (- end-col start-col) "^")
+                           (color-text (color:red)
+                                       (string-append* (make-list (- end-col start-col) "^")))
                            " "
-                           (Label-msg label)
+                           (color-text (color:red) (Label-msg label))
                            "\n")])
          (hash-set! msg-collection
                     label-line

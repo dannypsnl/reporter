@@ -28,7 +28,8 @@
   (: labels (Listof Label))
   (define labels (list* primary-label (Report-more-labels report)))
   (define collected (collection->text (collect-labels (Report-file-name report) labels)))
-  (text-append* err-c-str (Report-message report) "\n"
+  (text-append* (color-text (color:red) err-c-str)
+                (Report-message report) "\n"
                  (format "~a:~a:~a"
                          (Report-file-name report)
                          (Pos-line (Label-start primary-label))
