@@ -35,7 +35,8 @@
                          (Pos-line (Label-start primary-label))
                          (Pos-column (Label-start primary-label))) "\n"
                  collected
-                 "=> " (Report-hint-message report)
+                 (color-text (color:blue) "=> ")
+                 (Report-hint-message report)
                  "\n"))
 
 (define s (report->text
