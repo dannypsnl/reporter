@@ -3,6 +3,7 @@
 (provide text color-text
          text-append*
          print-text
+         text-repeat space-repeat
          (all-from-out "color.rkt"))
 
 (require/typed terminal-color
@@ -33,3 +34,10 @@
     ([? list?] (for-each
              (λ ([t : text]) (print-text t))
              t))))
+
+(: text-repeat (Integer text -> text))
+(define (text-repeat n t)
+  (text-append* (make-list n t)))
+(: space-repeat (Integer -> text))
+(define (space-repeat n)
+  (text-repeat n " "))

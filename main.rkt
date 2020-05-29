@@ -2,7 +2,8 @@
 
 (require racket/file)
 (require "position.rkt"
-         "label.rkt")
+         "label.rkt"
+         "text.rkt")
 
 (struct Report
   ([file-name : String]
@@ -17,8 +18,8 @@
 (define (report #:file-name file-name #:message msg #:primary-label primary-label #:error-code [err-code #f] #:more-labels [more-labels '()] #:hint-message [hint-message ""])
   (Report file-name msg primary-label err-code more-labels hint-message))
 
-(: report->string (-> Report String))
-(define (report->string report)
+(: report->text (Report -> text))
+(define (report->text report)
   (define err-c-str (let ([err-code (Report-error-code report)])
                       (if err-code
                           (format "[~a]: " err-code)
@@ -26,16 +27,17 @@
   (define primary-label (Report-primary-label report))
   (: labels (Listof Label))
   (define labels (list* primary-label (Report-more-labels report)))
-  (define collected (collection->string (collect-labels (Report-file-name report) labels)))
-  (string-append err-c-str (Report-message report) "\n"
+  (define collected (collection->text (collect-labels (Report-file-name report) labels)))
+  (text-append* err-c-str (Report-message report) "\n"
                  (format "~a:~a:~a"
                          (Report-file-name report)
                          (Pos-line (Label-start primary-label))
                          (Pos-column (Label-start primary-label))) "\n"
                  collected
-                 "=> " (Report-hint-message report)))
+                 "=> " (Report-hint-message report)
+                 "\n"))
 
-(define s (report->string
+(define s (report->text
            (report
             #:file-name "test.c"
             #:message "type mismatching"
@@ -43,4 +45,4 @@
             #:more-labels (list (Label (Pos 4 6) (Pos 4 7) "`x` is a `int` variable"))
             #:hint-message "expected type `int`, found type `string`"
             #:error-code "E0001")))
-(displayln s)
+(print-text s)
