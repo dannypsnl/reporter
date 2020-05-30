@@ -2,7 +2,11 @@
 
 (provide report
          report->text
-         print-text)
+         label
+         (all-from-out "color.rkt")
+         (all-from-out "position.rkt"))
+(require/typed/provide "print-text.rkt"
+               [print-text (text -> Void)])
 
 (require racket/file)
 (require "position.rkt"
