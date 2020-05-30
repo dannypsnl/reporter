@@ -3,10 +3,11 @@
 (provide report
          report->text
          label
-         (all-from-out "color.rkt")
+         (except-out (all-from-out "color.rkt")
+                     color->atom)
          (all-from-out "position.rkt"))
 (require/typed/provide "print-text.rkt"
-               [print-text (text -> Void)])
+                       [print-text (text -> Void)])
 
 (require racket/file)
 (require "position.rkt"
