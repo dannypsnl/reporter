@@ -7,8 +7,6 @@ WARNING: The project still in an early stage!
 ### Installation
 
 ```racket
-git submodule update --init
-cd ./terminal-color/ && raco pkg install --auto && cd ..
 raco pkg install --auto
 ```
 
