@@ -1,18 +1,24 @@
 #lang typed/racket
 
-(provide Label Label-start Label-end get-code
+(provide label
+         Label Label-start Label-end get-code
          collect-labels
          collection->text)
 
 (require racket/file)
 (require "position.rkt"
+         "color.rkt"
          "text.rkt")
 
 (struct Label
   ([start : Pos]
    [end : Pos]
-   [msg : String])
+   [msg : String]
+   [color : (Option color)])
   #:transparent)
+(: label (->*  (Pos Pos String) (#:color (Option color)) Label))
+(define (label start end msg #:color [color #f])
+  (Label start end msg color))
 
 (: get-code (Path Integer Integer -> (Listof text)))
 (define (get-code file-path start end)
@@ -41,24 +47,31 @@
     (for-each
      (λ ([label : Label])
        (let* ([label-line (get-line label)]
-              [msgs : (Listof text) (hash-ref! msg-collection label-line (λ () '()))]
+              [msgs (hash-ref! msg-collection label-line (λ () '()))]
               [start-col (Pos-column (Label-start label))]
               [end-col (Pos-column (Label-end label))]
+              [color (Label-color label)]
+              [point-out (string-append* (make-list (- end-col start-col) "^"))]
+              [label-msg (Label-msg label)]
+              [color-text (if color
+                              (text-append* (color-text color point-out)
+                                            " "
+                                            (color-text color label-msg))
+                              (text-append* point-out
+                                            " "
+                                            label-msg))]
               [msg (text-append*
-                           ;;; align with line number string
-                           (space-repeat (string-length (number->string label-line)))
-                           " | "
-                           ;;; provide space as column shifted
-                           (space-repeat start-col)
-                           ;;; repeat ^ to point out a part of code
-                           ; for example:
-                           ; 2 |     a = "hello";
-                           ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
-                           (color-text (color:red)
-                                       (string-append* (make-list (- end-col start-col) "^")))
-                           " "
-                           (color-text (color:red) (Label-msg label))
-                           "\n")])
+                    ;;; align with line number string
+                    (space-repeat (string-length (number->string label-line)))
+                    " | "
+                    ;;; provide space as column shifted
+                    (space-repeat start-col)
+                    ;;; repeat ^ to point out a part of code
+                    ; for example:
+                    ; 2 |     a = "hello";
+                    ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
+                    color-text     
+                    "\n")])
          (hash-set! msg-collection
                     label-line
                     (append msgs (list msg)))))

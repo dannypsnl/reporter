@@ -3,6 +3,7 @@
 (require racket/file)
 (require "position.rkt"
          "label.rkt"
+         "color.rkt"
          "text.rkt")
 
 (struct Report
@@ -43,8 +44,10 @@
            (report
             #:file-name "test.c"
             #:message "type mismatching"
-            #:primary-label (Label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable")
-            #:more-labels (list (Label (Pos 4 6) (Pos 4 7) "`x` is a `int` variable"))
+            #:primary-label (label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable"
+                                   #:color (color:red))
+            #:more-labels (list (label (Pos 4 6) (Pos 4 7) "`x` is a `int` variable"
+                                       #:color (color:blue)))
             #:hint-message "expected type `int`, found type `string`"
             #:error-code "E0001")))
 (print-text s)
