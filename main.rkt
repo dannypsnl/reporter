@@ -1,5 +1,9 @@
 #lang typed/racket
 
+(provide report
+         report->text
+         print-text)
+
 (require racket/file)
 (require "position.rkt"
          "label.rkt"
@@ -8,16 +12,16 @@
 
 (struct Report
   ([file-name : String]
+   [pos : Pos]
    [message : String]
-   [primary-label : Label]
    [error-code : (Option String)]
-   [more-labels : (Listof Label)]
+   [labels : (Listof Label)]
    [hint-message : String])
   #:transparent)
 
-(: report (->* [#:file-name String #:message String #:primary-label Label] [#:error-code (Option String) #:more-labels (Listof Label) #:hint-message String] Report))
-(define (report #:file-name file-name #:message msg #:primary-label primary-label #:error-code [err-code #f] #:more-labels [more-labels '()] #:hint-message [hint-message ""])
-  (Report file-name msg primary-label err-code more-labels hint-message))
+(: report (->* [#:file-name String #:pos Pos #:message String #:labels (Listof Label)] [#:error-code (Option String) #:hint-message String] Report))
+(define (report #:file-name file-name #:pos pos #:message msg #:labels labels #:error-code [err-code #f] #:hint-message [hint-message ""])
+  (Report file-name pos msg err-code labels hint-message))
 
 (: report->text (Report -> text))
 (define (report->text report)
@@ -25,29 +29,17 @@
                       (if err-code
                           (format "[~a]: " err-code)
                           "Error: ")))
-  (define primary-label (Report-primary-label report))
   (: labels (Listof Label))
-  (define labels (list* primary-label (Report-more-labels report)))
+  (define labels (Report-labels report))
   (define collected (collection->text (collect-labels (Report-file-name report) labels)))
   (text-append* (color-text (color:red) err-c-str)
                 (Report-message report) "\n"
-                 (format "~a:~a:~a"
-                         (Report-file-name report)
-                         (Pos-line (Label-start primary-label))
-                         (Pos-column (Label-start primary-label))) "\n"
-                 collected
-                 (color-text (color:blue) "=> ")
-                 (Report-hint-message report)
-                 "\n"))
-
-(define s (report->text
-           (report
-            #:file-name "test.c"
-            #:message "type mismatching"
-            #:primary-label (label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable"
-                                   #:color (color:red))
-            #:more-labels (list (label (Pos 4 6) (Pos 4 7) "`x` is a `int` variable"
-                                       #:color (color:blue)))
-            #:hint-message "expected type `int`, found type `string`"
-            #:error-code "E0001")))
-(print-text s)
+                (format "~a:~a:~a"
+                        (Report-file-name report)
+                        (Pos-line (Report-pos report))
+                        (Pos-column (Report-pos report)))
+                "\n"
+                collected
+                (color-text (color:blue) "=> ")
+                (Report-hint-message report)
+                "\n"))
