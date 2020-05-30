@@ -2,24 +2,30 @@
 
 Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). The purpose of this project is to create a util toolbox for compiler error reporting.
 
+![image](https://user-images.githubusercontent.com/22004511/83319528-e8440f00-a271-11ea-8d67-cca262a09862.png)
+
 WARNING: The project still in an early stage!
 
 ### Installation
 
 ```racket
+git clone https://github.com/dannypsnl/reporter.git 
 raco pkg install --auto
 ```
 
-### API draft
+### Current API
 
 ```racket
-(report
-  #:message "type mismatching"
-  #:error-code "E0905"
-  ;;; for example: `  int i = "hello";`
-  #:primary-label (label (Pos 3 10) (Pos 3 16) #:message "cannot assign a `string` to `int` variable"))
+(print-text
+ (report->text
+  (report
+    #:file-name "test.c" #:pos (Pos 4 10)
+    #:message "type mismatching"
+    #:labels (list
+               (label (Pos 4 10) (Pos 4 17) "cannot assign a `string` to `int` variable"
+                 #:color (color:red))
+               (label (Pos 4 6) (Pos 4 7) "`x` is a `int` variable"
+                 #:color (color:blue)))
+    #:hint-message "expected type `int`, found type `string`"
+    #:error-code "E0001")))
 ```
-
-### Current Status
-
-![image](https://user-images.githubusercontent.com/22004511/83261463-f3555b80-a1ed-11ea-8048-5b4ff4849f47.png)
