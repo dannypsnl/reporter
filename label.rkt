@@ -70,7 +70,7 @@
                     ; for example:
                     ; 2 |     a = "hello";
                     ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
-                    color-text     
+                    color-text
                     "\n")])
          (hash-set! msg-collection
                     label-line
