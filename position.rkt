@@ -21,5 +21,5 @@
 (module+ test
   (require typed/rackunit))
 (module+ test
-  (check-equal? (Pos-from-srcloc (make-srcloc 'here 1 2 0 0))
+  (check-equal? (Pos-from-srcloc (make-srcloc 'here 1 2 1 1))
                 (Pos 1 2)))
