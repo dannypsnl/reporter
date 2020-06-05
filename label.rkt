@@ -16,9 +16,11 @@
    [msg : String]
    [color : (Option color)])
   #:transparent)
-(: label (->*  (Pos Pos String) (#:color (Option color)) Label))
-(define (label start end msg #:color [color #f])
-  (Label start end msg color))
+(: label (->*  (Integer Integer Integer String) (#:color (Option color)) Label))
+(define (label line column-start column-end msg #:color [color #f])
+  (let ([start-pos (Pos line column-start)]
+        [end-pos (Pos line column-end)])
+    (Label start-pos end-pos msg color)))
 
 (: get-code (Path Integer Integer -> (Listof text)))
 (define (get-code file-path start end)
