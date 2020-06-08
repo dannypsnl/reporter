@@ -9,7 +9,7 @@ WARNING: The project still in an early stage!
 ### Installation
 
 ```racket
-git clone https://github.com/dannypsnl/reporter.git 
+git clone https://github.com/racket-tw/reporter.git 
 raco pkg install --auto
 ```
 
