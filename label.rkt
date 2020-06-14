@@ -22,28 +22,32 @@
         [end-pos (Pos line column-end)])
     (Label start-pos end-pos msg color)))
 
-(: get-code (Path Integer Integer -> (Listof text)))
-(define (get-code file-path start end)
+(define (get-code [file-path : Path]
+                  [show-lines : (Listof Integer)])
+  : (Listof text)
   (let ([lines : (Listof String) (file->lines file-path)])
     (map
      (λ ([line-number : Integer])
        (let* ([line-ref (- line-number 1)]
               [cur-line (list-ref lines line-ref)])
          (format "~a | ~a~n" line-number cur-line)))
-     (range start (+ 1 end)))))
+     show-lines)))
 
 (struct Collection
   ([file-path : Path]
-   [start-line : Integer]
-   [end-line : Integer]
+   ;;; pointed-lines stores a list of pointed line number
+   ; pointed line means has labels on it
+   ; !!! Must be a sorted list
+   [pointed-lines : (Listof Integer)]
    [messages : (Mutable-HashTable Integer (Listof text))])
   #:transparent)
 
-(: collect-labels (String (Listof Label) -> Collection))
-(define (collect-labels file-name label-list)
+(define (collect-labels [file-name : String]
+                        [label-list : (Listof Label)])
+  : Collection
   (define get-line (λ ([label : Label]) (Pos-line (Label-start label))))
-  (define min-line (get-line (argmin get-line label-list)))
-  (define max-line (get-line (argmax get-line label-list)))
+  (define pointed-lines : (Listof Integer)
+    '())
   (let ([file-path (string->path file-name)]
         [msg-collection : (Mutable-HashTable Integer (Listof text)) (make-hash '())])
     (for-each
@@ -74,19 +78,26 @@
                     ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
                     color-text
                     "\n")])
+         (if (memv label-line pointed-lines)
+             (void)
+             (set! pointed-lines (append pointed-lines (list label-line))))
          (hash-set! msg-collection
                     label-line
                     (append msgs (list msg)))))
      label-list)
-    (Collection file-path min-line max-line msg-collection)))
+    (Collection file-path
+                pointed-lines
+                msg-collection)))
 
 (: collection->text (Collection -> text))
 (define (collection->text c)
-  (define start-line (Collection-start-line c))
-  (define end-line (Collection-end-line c))
-  (define code-list (get-code (Collection-file-path c)
-                              (Collection-start-line c)
-                              (Collection-end-line c)))
+  (define show-lines (Collection-pointed-lines c))
+  ;;; code-list should exact same as pointed lines
+  (define code-list (get-code (Collection-file-path c) show-lines))
+  (define start-line
+    (if (empty? show-lines)
+        0
+        (car show-lines)))
   (text-append*
    (map (λ ([line-number : Integer])
           (text-append*
@@ -94,4 +105,4 @@
            (list-ref code-list (- line-number start-line))
            ; show message for current line
            (hash-ref! (Collection-messages c) line-number (λ () '()))))
-        (range start-line (+ end-line 1)))))
+        show-lines)))
