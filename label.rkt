@@ -16,8 +16,8 @@
    [msg : String]
    [color : (Option color)])
   #:transparent)
-(: label (->*  (Integer Integer Integer String) (#:color (Option color)) Label))
-(define (label line column-start column-end msg #:color [color #f])
+(: label (->*  (#:line Integer #:from Integer #:to Integer String) (#:color (Option color)) Label))
+(define (label #:line line #:from column-start #:to column-end msg #:color [color #f])
   (let ([start-pos (Pos line column-start)]
         [end-pos (Pos line column-end)])
     (Label start-pos end-pos msg color)))
