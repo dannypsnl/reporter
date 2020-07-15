@@ -53,13 +53,10 @@
          [point-out (string-append* (make-list (- end-col start-col) "^"))]
          [label-msg (Label-msg label)]
          [color (Label-color label)])
-    (if color
-        (text-append* (color-text color point-out)
-                      " "
-                      (color-text color label-msg))
-        (text-append* point-out
-                      " "
-                      label-msg))))
+    (let ([msg (string-append point-out " " label-msg)])
+      (if color
+          (color-text color msg)
+          msg))))
 (define (collect-labels [file-name : String]
                         [label-list : (Listof Label)])
   : Collection
