@@ -46,6 +46,10 @@
   : text
   (let* ([start-col (Pos-column (Label-start label))]
          [end-col (Pos-column (Label-end label))]
+         ;;; `point-out` repeat ^ to point out a part of code
+         ; for example:
+         ; 2 |     a = "hello";
+         ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
          [point-out (string-append* (make-list (- end-col start-col) "^"))]
          [label-msg (Label-msg label)]
          [color (Label-color label)])
@@ -59,14 +63,13 @@
 (define (collect-labels [file-name : String]
                         [label-list : (Listof Label)])
   : Collection
-  (define get-line (λ ([label : Label]) (Pos-line (Label-start label))))
   (define pointed-lines : (Listof Integer)
     '())
   (let ([file-path (string->path file-name)]
         [msg-collection : (Mutable-HashTable Integer (Listof text)) (make-hash '())])
     (for-each
      (λ ([label : Label])
-       (let* ([label-line (get-line label)]
+       (let* ([label-line (Pos-line (Label-start label))]
               [msgs (hash-ref! msg-collection label-line (λ () '()))]
               [msg (text-append*
                     ;;; align with line number string
@@ -74,10 +77,6 @@
                     " | "
                     ;;; provide space as column shifted
                     (space-repeat (Pos-column (Label-start label)))
-                    ;;; repeat ^ to point out a part of code
-                    ; for example:
-                    ; 2 |     a = "hello";
-                    ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
                     (Label-color-text label)
                     "\n")])
          (if (memv label-line pointed-lines)
