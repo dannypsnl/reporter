@@ -42,6 +42,20 @@
    [messages : (Mutable-HashTable Integer (Listof text))])
   #:transparent)
 
+(define (Label-color-text [label : Label])
+  : text
+  (let* ([start-col (Pos-column (Label-start label))]
+         [end-col (Pos-column (Label-end label))]
+         [point-out (string-append* (make-list (- end-col start-col) "^"))]
+         [label-msg (Label-msg label)]
+         [color (Label-color label)])
+    (if color
+        (text-append* (color-text color point-out)
+                      " "
+                      (color-text color label-msg))
+        (text-append* point-out
+                      " "
+                      label-msg))))
 (define (collect-labels [file-name : String]
                         [label-list : (Listof Label)])
   : Collection
@@ -54,29 +68,17 @@
      (λ ([label : Label])
        (let* ([label-line (get-line label)]
               [msgs (hash-ref! msg-collection label-line (λ () '()))]
-              [start-col (Pos-column (Label-start label))]
-              [end-col (Pos-column (Label-end label))]
-              [color (Label-color label)]
-              [point-out (string-append* (make-list (- end-col start-col) "^"))]
-              [label-msg (Label-msg label)]
-              [color-text (if color
-                              (text-append* (color-text color point-out)
-                                            " "
-                                            (color-text color label-msg))
-                              (text-append* point-out
-                                            " "
-                                            label-msg))]
               [msg (text-append*
                     ;;; align with line number string
                     (space-repeat (string-length (number->string label-line)))
                     " | "
                     ;;; provide space as column shifted
-                    (space-repeat start-col)
+                    (space-repeat (Pos-column (Label-start label)))
                     ;;; repeat ^ to point out a part of code
                     ; for example:
                     ; 2 |     a = "hello";
                     ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
-                    color-text
+                    (Label-color-text label)
                     "\n")])
          (if (memv label-line pointed-lines)
              (void)
