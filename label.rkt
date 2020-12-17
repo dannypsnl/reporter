@@ -1,7 +1,8 @@
 #lang typed/racket
 
 (provide label
-         Label Label-start Label-end get-code
+         (struct-out Label)
+         get-code
          collect-labels
          collection->text)
 
