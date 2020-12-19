@@ -30,11 +30,10 @@
                [(srcloc src line col _ span) target])
     (unless (and line col span)
       (error 'invalid "invalid target, expected to work with real file: ~a" target))
-    (text-append* (get-code (cast src Path-String) line)
-                  (space-repeat (string-length (number->string line)))
-                  " | "
-                  (space-repeat col)
-                  (string-append* (make-list span "^"))
-                  " "
-                  (if color? (color-text color? msg) msg)
-                  "\n")))
+    (let ([msg (format "~a ~a" (string-append* (make-list span "^")) msg)])
+      (text-append* (get-code (cast src Path-String) line)
+                    (space-repeat (string-length (number->string line)))
+                    " | "
+                    (space-repeat col)
+                    (if color? (color-text color? msg) msg)
+                    "\n"))))
