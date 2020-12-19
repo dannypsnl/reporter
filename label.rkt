@@ -1,10 +1,7 @@
 #lang typed/racket
 
-(provide label
-         (struct-out Label)
-         get-code
-         collect-labels
-         collection->text)
+(provide label Label->text
+         (struct-out Label))
 
 (require racket/file)
 (require "position.rkt"
@@ -12,96 +9,32 @@
          "text.rkt")
 
 (struct Label
-  ([start : Pos]
-   [end : Pos]
+  ([target : srcloc]
    [msg : String]
    [color : (Option color)])
   #:transparent)
-(: label (->*  (#:line Integer #:from Integer #:to Integer String) (#:color (Option color)) Label))
-(define (label #:line line #:from column-start #:to column-end msg #:color [color #f])
-  (let ([start-pos (Pos line column-start)]
-        [end-pos (Pos line column-end)])
-    (Label start-pos end-pos msg color)))
+(: label (->*  (srcloc String) (#:color (Option color)) Label))
+(define (label target msg #:color [color #f])
+  (Label target msg color))
 
-(define (get-code [file-path : Path]
-                  [show-lines : (Listof Integer)])
-  : (Listof text)
-  (let ([lines : (Listof String) (file->lines file-path)])
-    (map
-     (λ ([line-number : Integer])
-       (let* ([line-ref (- line-number 1)]
-              [cur-line (list-ref lines line-ref)])
-         (format "~a | ~a~n" line-number cur-line)))
-     show-lines)))
+(define (get-code [src : Path-String] [line : Integer])
+  : String
+  (let* ([lines : (Listof String) (file->lines src)]
+         [line-ref (- line 1)]
+         [cur-line (list-ref lines line-ref)])
+    (format "~a | ~a~n" line cur-line)))
 
-(struct Collection
-  ([file-path : Path]
-   ;;; pointed-lines stores a list of pointed line number
-   ; pointed line means has labels on it
-   ; !!! Must be a sorted list
-   [pointed-lines : (Listof Integer)]
-   [messages : (Mutable-HashTable Integer (Listof text))])
-  #:transparent)
-
-(define (Label-color-text [label : Label])
+(define (Label->text [label : Label])
   : text
-  (let* ([start-col (Pos-column (Label-start label))]
-         [end-col (Pos-column (Label-end label))]
-         ;;; `point-out` repeat ^ to point out a part of code
-         ; for example:
-         ; 2 |     a = "hello";
-         ;   |         ^^^^^^^ cannot assign a `string` to `int` variable
-         [point-out (string-append* (make-list (- end-col start-col) "^"))]
-         [label-msg (Label-msg label)]
-         [color (Label-color label)])
-    (let ([msg (string-append point-out " " label-msg)])
-      (if color
-          (color-text color msg)
-          msg))))
-(define (collect-labels [file-name : String]
-                        [label-list : (Listof Label)])
-  : Collection
-  (define pointed-lines : (Listof Integer)
-    '())
-  (let ([file-path (string->path file-name)]
-        [msg-collection : (Mutable-HashTable Integer (Listof text)) (make-hash '())])
-    (for-each
-     (λ ([label : Label])
-       (let* ([label-line (Pos-line (Label-start label))]
-              [msgs (hash-ref! msg-collection label-line (λ () '()))]
-              [msg (text-append*
-                    ;;; align with line number string
-                    (space-repeat (string-length (number->string label-line)))
-                    " | "
-                    ;;; provide space as column shifted
-                    (space-repeat (Pos-column (Label-start label)))
-                    (Label-color-text label)
-                    "\n")])
-         (if (memv label-line pointed-lines)
-             (void)
-             (set! pointed-lines (append pointed-lines (list label-line))))
-         (hash-set! msg-collection
-                    label-line
-                    (append msgs (list msg)))))
-     label-list)
-    (Collection file-path
-                pointed-lines
-                msg-collection)))
-
-(: collection->text (Collection -> text))
-(define (collection->text c)
-  (define show-lines (Collection-pointed-lines c))
-  ;;; code-list should exact same as pointed lines
-  (define code-list (get-code (Collection-file-path c) show-lines))
-  (define start-line
-    (if (empty? show-lines)
-        0
-        (car show-lines)))
-  (text-append*
-   (map (λ ([line-number : Integer])
-          (text-append*
-           ; show current line
-           (list-ref code-list (- line-number start-line))
-           ; show message for current line
-           (hash-ref! (Collection-messages c) line-number (λ () '()))))
-        show-lines)))
+  (match-let* ([(Label target msg color?) label]
+               [(srcloc src line col _ span) target])
+    (unless (and line col span)
+      (error 'invalid "invalid target, expected to work with real file: ~a" target))
+    (text-append* (get-code (cast src Path-String) line)
+                  (space-repeat (string-length (number->string line)))
+                  " | "
+                  (space-repeat col)
+                  (string-append* (make-list span "^"))
+                  " "
+                  (if color? (color-text color? msg) msg)
+                  "\n")))

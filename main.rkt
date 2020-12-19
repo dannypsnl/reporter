@@ -1,7 +1,6 @@
 #lang typed/racket
 
-(provide report
-         report->text
+(provide report report->text
          label
          (except-out (all-from-out "color.rkt")
                      color->atom)
@@ -16,35 +15,25 @@
          "text.rkt")
 
 (struct Report
-  ([file-name : String]
-   [pos : Pos]
+  ([error-code : (Option String)]
+   [target : srcloc]
    [message : String]
-   [error-code : (Option String)]
-   [labels : (Listof Label)]
-   [hint-message : String])
+   [label* : (Listof Label)]
+   [hint : (Option String)])
   #:transparent)
-
-(: report (->* [#:file-name String #:pos Pos #:message String #:labels (Listof Label)] [#:error-code (Option String) #:hint-message String] Report))
-(define (report #:file-name file-name #:pos pos #:message msg #:labels labels #:error-code [err-code #f] #:hint-message [hint-message ""])
-  (Report file-name pos msg err-code labels hint-message))
+(: report (->* [#:target srcloc #:message String #:labels (Listof Label)] [#:error-code (Option String) #:hint (Option String)] Report))
+(define (report #:target target #:message msg #:labels label* #:error-code [err-code #f] #:hint [hint #f])
+  (Report err-code target msg label* hint))
 
 (: report->text (Report -> text))
 (define (report->text report)
-  (define err-c-str (let ([err-code (Report-error-code report)])
-                      (if err-code
-                          (format "[~a]: " err-code)
-                          "Error: ")))
-  (: labels (Listof Label))
-  (define labels (Report-labels report))
-  (define collected (collection->text (collect-labels (Report-file-name report) labels)))
-  (text-append* (color-text (color:red) err-c-str)
-                (Report-message report) "\n"
-                (format "~a:~a:~a"
-                        (Report-file-name report)
-                        (Pos-line (Report-pos report))
-                        (Pos-column (Report-pos report)))
-                "\n"
-                collected
-                (color-text (color:blue) "=> ")
-                (Report-hint-message report)
-                "\n"))
+  (match-let ([(Report error-code? target message label* hint?) report])
+    (define err-c-str (if error-code? (format "[~a]: " error-code?) "Error: "))
+    (text-append* (color-text (color:red) err-c-str)
+                  message "\n"
+                  (srcloc->string target)
+                  "\n"
+                  (map (lambda (l) (Label->text l)) label*)
+                  (color-text (color:blue) "=> ")
+                  (if hint? hint? "")
+                  "\n")))
