@@ -3,8 +3,7 @@
 (provide report report->text
          label
          (except-out (all-from-out "color.rkt")
-                     color->atom)
-         (all-from-out "position.rkt"))
+                     color->atom))
 (require/typed/provide "print-text.rkt"
                        [print-text (text -> Void)])
 
