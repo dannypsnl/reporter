@@ -4,8 +4,7 @@
          (struct-out Label))
 
 (require racket/file)
-(require "position.rkt"
-         "color.rkt"
+(require "color.rkt"
          "text.rkt")
 
 (struct Label

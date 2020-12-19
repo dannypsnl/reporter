@@ -10,8 +10,7 @@
 (require/typed racket/base
                [srcloc->string (srcloc -> String)])
 (require racket/file)
-(require "position.rkt"
-         "label.rkt"
+(require "label.rkt"
          "color.rkt"
          "text.rkt")
 
