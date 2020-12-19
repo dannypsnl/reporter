@@ -7,8 +7,7 @@ Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). Th
 ### Installation
 
 ```racket
-git clone https://github.com/racket-tw/reporter.git 
-raco pkg install --auto
+raco pkg install --auto reporter
 ```
 
 ### Current API
@@ -25,6 +24,5 @@ raco pkg install --auto
                  #:color (color:red))
                (label srcloc? "`x` is a `int` variable"
                  #:color (color:blue)))
-    #:hint "expected type `int`, found type `string`"
-    )))
+    #:hint "expected type `int`, found type `string`")))
 ```
