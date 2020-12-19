@@ -8,6 +8,8 @@
 (require/typed/provide "print-text.rkt"
                        [print-text (text -> Void)])
 
+(require/typed racket/base
+               [srcloc->string (srcloc -> String)])
 (require racket/file)
 (require "position.rkt"
          "label.rkt"
