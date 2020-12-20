@@ -1,3 +1,7 @@
+### Current
+
+* (#18) keep line order
+
 ### v1.0.0
 
 * collect multiple labels that points to same line
