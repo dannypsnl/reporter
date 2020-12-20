@@ -20,9 +20,9 @@
    [label* : (Listof Label)]
    [hint : (Option String)])
   #:transparent)
-(: report (->* [#:target (U srcloc Syntax) #:message String #:labels (Listof Label)] [#:error-code (Option String) #:hint (Option String)] Report))
+(: report (->* [#:target srcloc #:message String #:labels (Listof Label)] [#:error-code (Option String) #:hint (Option String)] Report))
 (define (report #:target target #:message msg #:labels label* #:error-code [err-code #f] #:hint [hint #f])
-  (Report err-code (srcloc/syntax->loc target) msg label* hint))
+  (Report err-code (srcloc->loc target) msg label* hint))
 
 (: report->text (Report -> text))
 (define (report->text report)
@@ -32,7 +32,7 @@
                   message "\n"
                   (loc->string target)
                   "\n"
-                  (map (lambda (l) (Label->text l)) label*)
+                  (label*->text label*)
                   (color-text (color:blue) "=> ")
                   (if hint? hint? "")
                   "\n")))
