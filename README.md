@@ -2,7 +2,7 @@
 
 Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). The purpose of this project is to create a util toolbox for compiler error reporting.
 
-![image](https://user-images.githubusercontent.com/22004511/102697468-e8891380-4270-11eb-9da5-721d954fedb5.png)
+![image](https://user-images.githubusercontent.com/22004511/102704792-cfa55000-42ba-11eb-96db-0c35258ec7ee.png)
 
 ### Installation
 
