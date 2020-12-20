@@ -28,11 +28,3 @@
 (define (loc->string loc)
   (match-let ([(Loc src line col _ _) loc])
     (format "~a:~a:~a" src line col)))
-
-(module+ test
-  (require typed/rackunit)
-
-  (test-case
-    "srcloc -> Loc"
-    (define src (srcloc 'file 1 2 3 4))
-    (check-equal? (Loc-line (srcloc->loc src)) 1)))
