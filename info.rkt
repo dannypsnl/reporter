@@ -1,6 +1,6 @@
 #lang info
 (define collection "reporter")
-(define deps '("base" "ansi-color"))
+(define deps '("base" "ansi-color" "typed-racket-lib"))
 (define build-deps '("scribble-lib" "racket-doc" "rackunit-lib"
                      "c-utils"))
 (define scribblings '(("scribblings/reporter.scrbl" ())))
