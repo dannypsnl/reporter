@@ -1,4 +1,4 @@
-### Current
+### v1.0.0
 
 * collect multiple labels that points to same line
 
