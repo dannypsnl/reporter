@@ -1,6 +1,7 @@
 #lang typed/racket
 
 (provide report report->text
+         (struct-out Report)
          label
          (except-out (all-from-out "color.rkt")
                      color->atom))
