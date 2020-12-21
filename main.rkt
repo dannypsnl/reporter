@@ -1,19 +1,20 @@
 #lang typed/racket
 
-(provide report report->text
-         (struct-out Report)
+(provide report report->text label
+         Report?
+         ;; color
          (except-out (all-from-out "color.rkt")
                      color->atom))
 (require/typed/provide "print-text.rkt"
                        [print-text (text -> Void)])
-(require/typed/provide "label.rkt"
-                       [#:struct Label
-                        ([target : Path-String]
-                         [msg : String]
-                         [color? : (Option color)])]
-                       [label (->* (srcloc String) (#:color (Option color)) Label)]
-                       [label*->text (-> (Listof Label) text)])
 
+(require/typed "label.rkt"
+               [#:struct Label
+                ([target : Path-String]
+                 [msg : String]
+                 [color? : (Option color)])]
+               [label (->* (srcloc String) (#:color (Option color)) Label)]
+               [label*->text (-> (Listof Label) text)])
 (require racket/file)
 (require "loc.rkt"
          "color.rkt"
