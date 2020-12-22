@@ -1,5 +1,7 @@
 ### Current
 
+### v1.0.1
+
 * (#18) keep line order
 
 ### v1.0.0
