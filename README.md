@@ -2,17 +2,25 @@
 
 Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). The purpose of this project is to create a util toolbox for compiler error reporting.
 
-![image](https://user-images.githubusercontent.com/22004511/102704792-cfa55000-42ba-11eb-96db-0c35258ec7ee.png)
-
 ### Installation
 
 ```racket
 raco pkg install --auto reporter
 ```
 
-### Current API
+### Usage
+
+#### Example
+
+Take a look at [example](https://github.com/racket-tw/reporter/tree/develop/example).
+
+#### Current API
 
 ```racket
+#lang racket
+
+(require reporter)
+
 (print-text
  (report->text
   (report
