@@ -8,7 +8,7 @@
 @defmodule[reporter]
 
 @defstruct*[Report ()]{
-  all fields were private to avoid any hack based on this.
+  The report structure, all fields were private to avoid any hack based on this. @racket[report] constructs this structure, directly print it would get report to stdout.
 }
 
 @defproc[(report [#:target target srcloc?]
@@ -20,17 +20,15 @@
   constructor of @code{Report}
 }
 
-@defproc[(report->text [report Report?]) text?]{
-  convert report to text
-}
-
-@defproc[(print-text [text text?]) void?]{
-  print text
-}
-
 @defproc[(label [target srcloc?]
                 [msg string?]
                 [#:color color color? #f])
           Label?]{
-  constructor of label
+  constructor of label, @racket[target] points out 
 }
+
+@defstruct*[color ()]{
+  It could be @code{color:red} or @code{color:blue}
+}
+@defstruct*[color:red ()]{}
+@defstruct*[color:blue ()]{}

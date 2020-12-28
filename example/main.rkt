@@ -103,5 +103,4 @@
   (check-decl decl))
 
 (for ([report (report*)])
-  (print-text
-   (report->text report)))
+  (displayln report))
