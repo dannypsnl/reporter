@@ -1,5 +1,7 @@
 ### Current
 
+* remove `report->text` and `print-text`, and let `(displayln report?)` work
+
 ### v1.0.1
 
 * (#18) keep line order
