@@ -1,5 +1,7 @@
 ### Current
 
+### v1.1.0
+
 * remove `report->text` and `print-text`, and let `(displayln report?)` work
 
 ### v1.0.1
