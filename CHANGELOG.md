@@ -1,5 +1,16 @@
 ### Current
 
+* `collect-report` and `current-report-collection` make report collecting eaiser
+
+    ```racket
+    (collect-report
+      ;; usage
+      ...)
+
+    ;; get all current report
+    (current-report-collection)
+    ```
+
 ### v1.1.0
 
 * remove `report->text` and `print-text`, and let `(displayln report?)` work

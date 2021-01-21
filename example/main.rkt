@@ -8,10 +8,6 @@
   (match-let ([(src start-offset start-line start-col end-offset end-line end-col path) s])
     (srcloc path start-line start-col start-offset (- end-offset start-offset))))
 
-(define report* (make-parameter '()))
-(define (new-report r)
-  (report* (append (report*) (list r))))
-
 (struct env (cur parent) #:transparent)
 (define (make-env)
   (env (make-hash) (cur-env)))
@@ -77,9 +73,8 @@
         (match stmt
           [(stmt:block _ stmt*)
            (for ([stmt stmt*])
-             (with-handlers ([Report?
-                              (λ (r) (new-report r))])
-               (check-stmt stmt f-ret-type)))]
+             (collect-report
+              (check-stmt stmt f-ret-type)))]
           [(stmt:return _ expr?)
            (ty-eq!! loc f-ret-type (infer expr?))]
           [else (error 'unimplement)]))))
@@ -102,5 +97,5 @@
 (for ([decl buggy-program])
   (check-decl decl))
 
-(for ([report (report*)])
+(for ([report (current-report-collection)])
   (displayln report))

@@ -9,7 +9,7 @@
          "text.rkt"
          "color.rkt")
 
-(struct Report (error-code  target message label* hint)
+(struct Report (error-code target message label* hint)
   #:methods gen:custom-write
   [(define (write-proc report port mode)
      (parameterize ([current-output-port port])
