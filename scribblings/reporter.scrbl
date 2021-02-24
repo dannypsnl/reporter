@@ -40,7 +40,7 @@
 @defform[(collect-report body ...)]{
  This form works like most normal block like @racket[when], with its wrapping one can collect a raised @racket[Report], find a suitable level put it can help one report more error at once.
 }
-@defparam[(current-report-collection) reports (listof Report)]{
+@defparam[current-report-collection reports (listof Report)]{
  This parameter stands for collecting report from @racket[collect-report], using it can get all reports current collected, with this one can simply print out all reports or do more operations on it.
 }
 
