@@ -1,5 +1,7 @@
 # reporter
 
+[![codecov](https://codecov.io/gh/racket-tw/reporter/branch/develop/graph/badge.svg?token=YNLJH0GKRM)](https://codecov.io/gh/racket-tw/reporter)
+
 Reporter is inspired from [codespan](https://github.com/brendanzab/codespan). The purpose of this project is to create a util toolbox for compiler error reporting.
 
 ### Installation
