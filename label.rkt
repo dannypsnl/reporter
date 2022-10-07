@@ -1,9 +1,7 @@
 #lang racket/base
-(provide label
-         label*->text
+(provide label*->text
          get-max-line
-         (struct-out Label)
-         any->loc)
+         (struct-out Label))
 (require racket/file
          racket/match
          racket/set
@@ -18,11 +16,11 @@
    msg
    color?)
   #:transparent)
-(define (label target msg #:color [color #f])
-  (Label (any->loc target) msg color))
 
 (define (get-max-line label*)
-  (apply max (map (compose Loc-line Label-target) label*)))
+  (if (empty? label*)
+      0
+      (apply max (map (compose Loc-line Label-target) label*))))
 
 (define (label*->text label* pre-code-shift)
   (define t '())
@@ -77,14 +75,3 @@
                     (space-repeat col)
                     (if color? (color-text color? msg) msg)
                     "\n"))))
-
-(define (stx->loc stx)
-  (srcloc->loc (srcloc (syntax-source stx)
-                       (syntax-line stx)
-                       (syntax-column stx)
-                       (syntax-position stx)
-                       (syntax-span stx))))
-(define (any->loc e)
-  (cond
-    [(srcloc? e) (srcloc->loc e)]
-    [(syntax? e) (stx->loc e)]))

@@ -19,6 +19,20 @@
           label*
           hint))
 
+(define (label target msg #:color [color #f])
+  (Label (any->loc target) msg color))
+
+(define (stx->loc stx)
+  (srcloc->loc (srcloc (syntax-source stx)
+                       (syntax-line stx)
+                       (syntax-column stx)
+                       (syntax-position stx)
+                       (syntax-span stx))))
+(define (any->loc e)
+  (cond
+    [(srcloc? e) (srcloc->loc e)]
+    [(syntax? e) (stx->loc e)]))
+
 (module+ test
   (require rackunit)
   (require syntax/parse)
