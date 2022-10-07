@@ -2,7 +2,8 @@
 (provide label
          label*->text
          get-max-line
-         (struct-out Label))
+         (struct-out Label)
+         any->loc)
 (require racket/file
          racket/match
          racket/set
@@ -18,7 +19,7 @@
    color?)
   #:transparent)
 (define (label target msg #:color [color #f])
-  (Label (srcloc->loc target) msg color))
+  (Label (any->loc target) msg color))
 
 (define (get-max-line label*)
   (apply max (map (compose Loc-line Label-target) label*)))
@@ -76,3 +77,14 @@
                     (space-repeat col)
                     (if color? (color-text color? msg) msg)
                     "\n"))))
+
+(define (stx->loc stx)
+  (srcloc->loc (srcloc (syntax-source stx)
+                       (syntax-line stx)
+                       (syntax-column stx)
+                       (syntax-position stx)
+                       (syntax-span stx))))
+(define (any->loc e)
+  (cond
+    [(srcloc? e) (srcloc->loc e)]
+    [(syntax? e) (stx->loc e)]))
