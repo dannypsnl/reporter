@@ -16,13 +16,17 @@
 
 (define (report->text report)
   (match-let ([(Report error-code? target message label* hint?) report])
-    (define err-c-str (if error-code? (format "[~a]: " error-code?) "Error: "))
+    (define err-c-str (if error-code? (format "error[~a]: " error-code?) "error: "))
     (text-append* (color-text (color:red) err-c-str)
                   message "\n"
+
+                  (color-text (color:blue) "  --> ")
                   (loc->string target)
                   "\n"
+
                   (label*->text label*)
-                  (color-text (color:blue) "=> ")
+
+                  (color-text (color:blue) "  => ")
                   (if hint? hint? "")
                   "\n")))
 
@@ -35,4 +39,11 @@
     ([? list?] (for-each
                 (λ (t) (print-text t))
                 t))))
+
+
+
+
+
+
+
 

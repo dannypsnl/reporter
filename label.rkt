@@ -50,15 +50,23 @@
   (let* ([lines (file->lines src)]
          [line-ref (- line 1)]
          [cur-line (list-ref lines line-ref)])
-    (format "~a | ~a~n" line cur-line)))
+    (list (color-text (color:blue) (format "~a |" line))
+          (format " ~a~n" cur-line))))
 
 (define (Label->text label)
   (match-let* ([(Label target msg color?) label]
                [(Loc src line col _ span) target])
     (let ([msg (format "~a ~a" (string-append* (make-list span "^")) msg)])
       (text-append* (space-repeat (string-length (number->string line)))
-                    " | "
+                    (color-text (color:blue) " | ")
                     (space-repeat col)
                     (if color? (color-text color? msg) msg)
                     "\n"))))
+
+
+
+
+
+
+
 
