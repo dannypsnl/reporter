@@ -1,8 +1,6 @@
 #lang typed/racket/base
-
 (provide (struct-out Loc)
          srcloc->loc loc->string)
-
 (require racket/match)
 
 (struct Loc
@@ -28,3 +26,5 @@
 (define (loc->string loc)
   (match-let ([(Loc src line col _ _) loc])
     (format "~a:~a:~a" src line col)))
+
+

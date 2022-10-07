@@ -1,9 +1,7 @@
 #lang typed/racket
-
 (provide text color-text
          text-append*
          text-repeat space-repeat)
-
 (require "color.rkt")
 
 (define-type text (U color-text String (Listof text)))
@@ -22,3 +20,4 @@
 (: space-repeat (Integer -> text))
 (define (space-repeat n)
   (text-repeat n " "))
+

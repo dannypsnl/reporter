@@ -1,5 +1,4 @@
 #lang typed/racket
-
 (provide color color:red color:blue
          color->atom)
 

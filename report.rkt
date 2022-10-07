@@ -1,7 +1,5 @@
 #lang racket/base
-
 (provide (struct-out Report))
-
 (require racket/match
          ansi-color)
 (require "loc.rkt"
@@ -37,3 +35,4 @@
     ([? list?] (for-each
                 (λ (t) (print-text t))
                 t))))
+

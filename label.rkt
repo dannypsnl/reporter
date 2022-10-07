@@ -1,8 +1,6 @@
 #lang racket/base
-
 (provide label label*->text
          (struct-out Label))
-
 (require racket/file
          racket/match
          racket/set
@@ -44,8 +42,8 @@
            [key (cons src line)]
            [prev (hash-ref m key #f)])
       (if prev
-        (hash-set! m key (append prev (list label)))
-        (hash-set! m key (list label)))))
+          (hash-set! m key (append prev (list label)))
+          (hash-set! m key (list label)))))
   m)
 
 (define (get-code src line)
@@ -63,3 +61,4 @@
                     (space-repeat col)
                     (if color? (color-text color? msg) msg)
                     "\n"))))
+
