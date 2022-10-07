@@ -5,17 +5,13 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        racket-variant: [ 'BC', 'CS' ]
-        racket-version: [ '8.0', '8.1' ]
     steps:
     - uses: actions/checkout@master
     - name: Setup Racket
-      uses: Bogdanp/setup-racket@v1.5
+      uses: Bogdanp/setup-racket@v1.8.1
       with:
-        architecture: 'x64' # (x64 or x86), ignored on Linux
-        variant: ${{ matrix.racket-variant }}
-        version: ${{ matrix.racket-version }}
+        architecture: 'x64'
+        variant: ['BC', 'CS']
+        version: ['stable', 'current']
     - run: raco pkg install --auto
     - run: raco test .
