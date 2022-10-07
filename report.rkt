@@ -17,16 +17,20 @@
 (define (report->text report)
   (match-let ([(Report error-code? target message label* hint?) report])
     (define err-c-str (if error-code? (format "error[~a]: " error-code?) "error: "))
+    (define max-line (get-max-line label*))
+    (define pre-code-shift (add1 (string-length (number->string max-line))))
     (text-append* (color-text (color:red) err-c-str)
                   message "\n"
 
-                  (color-text (color:blue) "  --> ")
+                  (space-repeat pre-code-shift)
+                  (color-text (color:blue) "--> ")
                   (loc->string target)
                   "\n"
 
-                  (label*->text label*)
+                  (label*->text label* pre-code-shift)
 
-                  (color-text (color:blue) "  => ")
+                  (space-repeat pre-code-shift)
+                  (color-text (color:blue) "=> ")
                   (if hint? hint? "")
                   "\n")))
 
