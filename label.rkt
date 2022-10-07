@@ -62,11 +62,3 @@
                     (space-repeat col)
                     (if color? (color-text color? msg) msg)
                     "\n"))))
-
-
-
-
-
-
-
-

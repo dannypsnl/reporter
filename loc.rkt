@@ -26,5 +26,3 @@
 (define (loc->string loc)
   (match-let ([(Loc src line col _ _) loc])
     (format "~a:~a:~a" src line col)))
-
-

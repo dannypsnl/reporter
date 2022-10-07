@@ -39,11 +39,3 @@
     ([? list?] (for-each
                 (λ (t) (print-text t))
                 t))))
-
-
-
-
-
-
-
-

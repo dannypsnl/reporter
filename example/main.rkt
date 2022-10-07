@@ -100,5 +100,3 @@
 
 (for ([report (current-report-collection)])
   (displayln report))
-
-

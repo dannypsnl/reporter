@@ -20,4 +20,3 @@
 (: space-repeat (Integer -> text))
 (define (space-repeat n)
   (text-repeat n " "))
-
