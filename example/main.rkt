@@ -12,7 +12,7 @@
 (define (make-env)
   (env (make-hash) (cur-env)))
 (define cur-env (make-parameter (env (make-hash) #f)))
- 
+
 (define (bind src id typ)
   (let* ([cur-binding (env-cur (cur-env))]
          [prev (hash-ref cur-binding id #f)]
@@ -89,7 +89,8 @@
      [(expr:ref? expr) (lookup (id-src (expr:ref-id expr)) (id:var-name (expr:ref-id expr)))]
      [else (error 'unimplement-expr "~a" expr)])))
 
-(define test-target-file (build-path 'same "buggy.c"))
+(require racket/runtime-path)
+(define-runtime-path test-target-file "buggy.c")
 ;; buggy-program : (Listof decl)
 (define buggy-program (parse-program (open-input-file test-target-file)
                                      #:source test-target-file))
@@ -99,3 +100,5 @@
 
 (for ([report (current-report-collection)])
   (displayln report))
+
+
