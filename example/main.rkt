@@ -22,8 +22,8 @@
                 #:error-code "E0001"
                 #:message "redefinition"
                 #:target loc
-                #:labels (list (label (src->srcloc (type-src prev)) "previous definition" #:color (color:blue))
-                               (label loc "current definition" #:color (color:red)))
+                #:labels (list (label (src->srcloc (type-src prev)) "previous definition" #:color 'blue)
+                               (label loc "current definition" #:color 'red))
                 #:hint "redeclare same identifier in same scope was invalid"))
         (hash-set! cur-binding id (type:primitive src (type:primitive-name typ))))))
 (define (lookup src id)
@@ -38,7 +38,7 @@
                           #:error-code "E0002"
                           #:message "undefined variable"
                           #:target loc
-                          #:labels (list (label loc (format "undefined: `~a`" id) #:color (color:red)))
+                          #:labels (list (label loc (format "undefined: `~a`" id) #:color 'red))
                           #:hint (format "variable `~a` not found" id)))))))
 
 (define (ty-eq!! loc exp-ty actual-ty)
@@ -51,8 +51,8 @@
               #:error-code "E0000"
               #:message "type mismatched"
               #:target loc
-              #:labels (list (label e-loc (format "expect: ~a" e) #:color (color:blue))
-                             (label a-loc (format "got: ~a" a) #:color (color:red)))
+              #:labels (list (label e-loc (format "expect: ~a" e) #:color 'blue)
+                             (label a-loc (format "got: ~a" a) #:color 'red))
               #:hint (format "expected: `~a` but got: `~a`" e a))))))
 
 (define (check-decl decl)

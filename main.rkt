@@ -2,8 +2,7 @@
 (provide report label
          Report?
          ;; color
-         (except-out (all-from-out "color.rkt")
-                     color->atom)
+         (all-from-out "color.rkt")
          current-report-collection
          collect-report)
 (require "loc.rkt"
@@ -47,8 +46,8 @@
                                #:target target
                                #:labels (list
                                          (label a "a is here"
-                                                #:color (color:red))
+                                                #:color 'red)
                                          (label b "b is here"
-                                                #:color (color:blue)))
+                                                #:color 'blue))
                                #:hint "super weird"))
              (check-pred Report? a-report)))

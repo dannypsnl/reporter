@@ -8,7 +8,6 @@
          racket/string
          racket/list)
 (require "loc.rkt"
-         "color.rkt"
          "text.rkt")
 
 (struct Label
@@ -59,10 +58,10 @@
   (let* ([lines (file->lines src)]
          [line-ref (- line 1)]
          [cur-line (list-ref lines line-ref)])
-    (list (color-text (color:blue) (format "~a" line))
+    (list (color-text (format "~a" line) #:color 'blue)
           (space-repeat (- pre-code-shift
                            (string-length (number->string line))))
-          (color-text (color:blue) "|")
+          (color-text "|" #:color 'blue)
           (format " ~a~n" cur-line))))
 
 (define (Label->text label pre-code-shift)
@@ -70,8 +69,8 @@
                [(Loc src line col _ span) target])
     (let ([msg (format "~a ~a" (string-append* (make-list span "^")) msg)])
       (text-append* (space-repeat (sub1 pre-code-shift))
-                    (color-text (color:blue) " | ")
+                    (color-text " | "  #:color 'blue)
                     ; code part
                     (space-repeat col)
-                    (if color? (color-text color? msg) msg)
+                    (if color? (color-text msg #:color color?) msg)
                     "\n"))))
