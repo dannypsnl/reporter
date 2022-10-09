@@ -5,7 +5,7 @@
 - use `'blue` to configure color, old functions are removed
 - NOTE: use `colorize` to replace `ansi-color`
 - adjust spacing for code printing (ref #22)
-- `collect-report` and `current-report-collection` make report collecting eaiser
+- `collect-report` and `current-report-collection` make report collecting easier
 
   ```racket
   (collect-report

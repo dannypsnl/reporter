@@ -30,8 +30,8 @@ Take a look at [example](https://github.com/racket-tw/reporter/tree/develop/exam
    #:target srcloc?
    #:labels (list
               (label srcloc? "cannot assign a `string` to `int` variable"
-                #:color (color:red))
+                #:color 'red)
               (label srcloc? "`x` is a `int` variable"
-                #:color (color:blue)))
+                #:color 'blue))
    #:hint "expected type `int`, found type `string`"))
 ```
