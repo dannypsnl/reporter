@@ -1,6 +1,7 @@
 #lang racket/base
 (provide report label
          Report?
+         Label?
          ;; color
          (all-from-out "color.rkt")
          current-report-collection

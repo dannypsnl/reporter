@@ -7,7 +7,7 @@
                      "c-utils"))
 (define scribblings '(("scribblings/reporter.scrbl" ())))
 (define pkg-desc "Description Here")
-(define version "1.1.0")
+(define version "2.0.0")
 (define pkg-authors '(dannypsnl))
 
 (define compile-omit-paths '("example"))
