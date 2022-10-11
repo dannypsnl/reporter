@@ -3,7 +3,7 @@
                     racket]]
 
 @title{reporter}
-@author[(author+email "racket.tw" "racket@racket.tw")]
+@author[(author+email "Lîm Tsú-thuàn" "dannypsnl@gmail.com")]
 
 @defmodule[reporter]
 
