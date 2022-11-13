@@ -21,6 +21,6 @@
 
   (parameterize ([current-report-collection '()])
     (collect-report
-     (raise (Report "E0001" (Loc "collect.rkt" 1 1 1 1) "test" '() #f)))
+     (raise (Error "E0001" (Loc "collect.rkt" 1 1 1 1) "test" '() #f)))
     (check-eq? (length (current-report-collection))
                1)))
