@@ -1,5 +1,10 @@
 ### Current
 
+### v2.1.0
+
+- enable color: `'yellow`, `'green`
+- `warning` function to create warning level reports
+
 ### v2.0.0
 
 - use `'blue` to configure color, old functions are removed
