@@ -1,6 +1,9 @@
 #lang racket/base
-(provide report label
+(provide report warning ; top level reporting
+         label
          Report?
+         Error?
+         Warning?
          Label?
          ;; color
          (all-from-out "color.rkt")
@@ -13,11 +16,16 @@
          "collect.rkt")
 
 (define (report #:target target #:message msg #:labels label* #:error-code [err-code #f] #:hint [hint #f])
-  (Report err-code
-          (any->loc target)
-          msg
-          label*
-          hint))
+  (Error err-code
+         (any->loc target)
+         msg
+         label*
+         hint))
+(define (warning #:target target #:message msg #:labels label* #:hint [hint #f])
+  (Warning (any->loc target)
+           msg
+           label*
+           hint))
 
 (define (label target msg #:color [color #f])
   (Label (any->loc target) msg color))
@@ -52,3 +60,11 @@
                                                 #:color 'blue))
                                #:hint "super weird"))
              (check-pred Report? a-report)))
+
+(module+ main
+  (displayln (warning #:message "example"
+                      #:target #'here
+                      #:labels (list
+                                (label #'this "this" #:color 'green)
+                                (label #'that "that" #:color 'blue))
+                      #:hint "self warning")))
