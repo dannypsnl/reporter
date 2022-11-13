@@ -34,4 +34,11 @@ Take a look at [example](https://github.com/racket-tw/reporter/tree/develop/exam
               (label srcloc? "`x` is a `int` variable"
                 #:color 'blue))
    #:hint "expected type `int`, found type `string`"))
+
+(displayln (warning #:message "shadow the variable"
+                    #:target srcloc?
+                    #:labels (list
+                               (label srcloc? "previous definition" #:color 'green)
+                               (label srcloc? "shadow definition" #:color 'blue))
+                    #:hint "rename the shadow variable"))
 ```
